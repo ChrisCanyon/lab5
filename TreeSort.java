@@ -1,6 +1,7 @@
 import java.util.Iterator;
 import bst.*;
 import ki.KeyedItem;
+import java.lang.reflect.Array;
 
 public class TreeSort
 {
@@ -12,7 +13,16 @@ public class TreeSort
 
   public static KeyedItem[] treeSort(KeyedItem[] sort, int n){
     //easier to use a KeyedItem array than Comparable
-    KeyedItem[] sorted = (KeyedItem[])sort.getComponentType().newInstance()[sort.length];
+    Class sortComponent = sort.getClass().getComponentType();
+    KeyedItem[] sorted;
+    try{
+      sorted = (KeyedItem[])Array.newInstance(sortComponent, sort.length);
+    } catch(Exception e){
+      // oopsie poopsie
+      System.out.println(e);
+      System.out.println("returning null");
+      return null;
+    }
 
     if (n > sort.length) {
       n = sort.length;
@@ -22,7 +32,7 @@ public class TreeSort
 
     //create a new Binary Search Tree
     //a balanced tree ensures logn inserts for nlogn sort
-    tree = new BinarySearchTree(false, '.');
+    BinarySearchTree tree = new BinarySearchTree(true, true);
 
     //need to use the Class class as the actual array type may be a subtype of KeyedItem
     // ??
@@ -36,8 +46,9 @@ public class TreeSort
     //pull sorted stuff out of the tree
     i = 0;
     TreeIterator iter = tree.iterator();
+    iter.setInorder();
     while(iter.hasNext()){
-      sorted[i] = iter.next();
+      sorted[i] = (KeyedItem)iter.next();
       i++;
     }
 

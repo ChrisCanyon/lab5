@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import ki.*;
 
 public class TreeSortDriver
 {
@@ -36,7 +37,7 @@ public class TreeSortDriver
 
       file.close();
       //create a CD[] of the correct size, populate it using a for-each statement
-      CD[] cds_array = new CD()[cds.size()];
+      CD[] cds_array = new CD[cds.size()];
       int i = 0;
       for(CD cd : cds){
         cds_array[i] = cd;
@@ -52,15 +53,15 @@ public class TreeSortDriver
       //until a valid file name is entered
       //as checked exceptions have been converted to unchecked exceptions,
       //you must remember to do this with end user input, the compiler will not help you
-      CD[] cds;
-      Keyboard kb = new Keyboard();
+      CD[] cds = null;
+      Keyboard kb = Keyboard.getKeyboard();
       String fileName;
 
       boolean c = true;
-      while(c){
+      while(cds == null){
         try{
           // read in filename
-          fileName = kb.readString();
+          fileName = kb.readString("Please enter the filename of the CDs ");
           cds = readMusic(fileName);
           c = false;
         }catch(Exception e){
@@ -69,10 +70,10 @@ public class TreeSortDriver
       }
       //once you have the array of CDs back from readMusic, sort them
       TreeSort sorter = new TreeSort();
-      cds = (CD[])sorter.treeSort((KeyedItem[])cds);
+      CD[] sorted_cds = (CD[])sorter.treeSort((KeyedItem[])cds);
       //and print them out to make sure that they are sorted
-      for(int i = 0; i < cds.length; i++){
-        System.out.println(cds[i].toString());
+      for(int i = 0; i < sorted_cds.length; i++){
+        System.out.println(sorted_cds[i].toString());
       }
    }
 }
